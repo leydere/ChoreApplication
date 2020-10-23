@@ -1,0 +1,147 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChoreApplication"
+        x:Class="ChoreApplication.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="732" Width="412" Loaded="Window_Loaded">
+    <Window.Resources>
+        <!--<local:Database1DataSet x:Key="database1DataSet"/>-->
+
+        <CollectionViewSource x:Key="usersViewSource" Source="{Binding Users, Source={StaticResource database1DataSet}}"/>
+        <CollectionViewSource x:Key="choresViewSource" Source="{Binding Chores, Source={StaticResource database1DataSet}}"/>
+        <CollectionViewSource x:Key="scoreCardViewSource" Source="{Binding ScoreCard, Source={StaticResource database1DataSet}}"/>
+        <CollectionViewSource x:Key="specificChoresViewSource" Source="{Binding SpecificChores, Source={StaticResource database1DataSet}}"/>
+
+    </Window.Resources>
+    <!-- This is the viewport pixel size of a Nexus 5X -->
+    <!-- Found at https://mediag.com/blog/popular-screen-resolutions-designing-for-all/ -->
+    <Grid Background="Aqua">
+        <TabControl HorizontalAlignment="Left" Height="701" VerticalAlignment="Top" Width="404" Grid.ColumnSpan="2" SelectionChanged="TabControl_SelectionChanged">
+
+            <TabItem x:Name="HomeTab" Background="MediumAquamarine" BorderBrush="WhiteSmoke" BorderThickness="1" Header="Home" Height="30" Margin="-2,-1,-2,0" VerticalAlignment="Top">
+                <Grid Background="Aqua">
+                    <Grid x:Name="LoginGrid" HorizontalAlignment="Left" Height="663" VerticalAlignment="Top" Width="398" Background="Aqua" DataContext="{StaticResource usersViewSource}">
+                        <Button x:Name="Login" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Login" HorizontalAlignment="Left" Margin="160,226,0,0" VerticalAlignment="Top" Width="74" Click="Login_Click"/>
+                        <!--SelectedValuePath="UserID"-->
+                        <ComboBox x:Name="UserPicker" HorizontalAlignment="Left" Margin="135,132,0,0" VerticalAlignment="Top" Width="120" DisplayMemberPath="UserName" SelectionChanged="UserPicker_SelectionChanged" ItemsSource="{Binding}"/>
+                        <Label x:Name="SelectedUserLabel" Content="Selected User:" HorizontalAlignment="Left" Margin="125,174,0,0" VerticalAlignment="Top"/>
+                        <Label x:Name="selectedUserLabelName" Content="none." HorizontalAlignment="Left" Margin="216,174,0,0" VerticalAlignment="Top" RenderTransformOrigin="3.789,4.462"/>
+                    </Grid>
+                    <Grid x:Name="UserGrid" HorizontalAlignment="Left" Height="321" VerticalAlignment="Top" Width="Auto" Background="Gray" DataContext="{StaticResource usersViewSource}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="374*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="Logout" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Logout" Margin="137.5,115,162,0" VerticalAlignment="Top" Click="Logout_Click" Grid.Column="1"/>
+                        <Image Height="100" Margin="124.5,10,149,0" VerticalAlignment="Top" Source="{Binding ProfilePicture}" Grid.Column="1"/>
+                        <DataGrid x:Name="SpecificUserChoreList" Background="Aqua" IsReadOnly="True" HorizontalAlignment="Left" Height="212" Margin="0,320,0,-211" VerticalAlignment="Top" Width="398" Grid.ColumnSpan="2" ItemsSource="{Binding Source={StaticResource specificChoresViewSource}}"/>
+
+                        <Button x:Name="UncommitBtn" Background="Fuchsia" Content="UnCommit" HorizontalAlignment="Left" Margin="0,617,0,-296" VerticalAlignment="Top" Width="74" Click="UncommitBtn_Click" Grid.ColumnSpan="2"/>
+                        <Button x:Name="CompleteUserChore" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Complete" HorizontalAlignment="Left" Height="Auto" Margin="233.5,537,0,-236" VerticalAlignment="Center" Width="75" Click="CompleteUserChore_Click" Grid.Column="1"/>
+
+                        <Label Content="Score:" HorizontalAlignment="Left" Margin="20,536,0,-241" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="PrivateScore" IsReadOnly="True" Background="Aqua" BorderBrush="Aqua" HorizontalAlignment="Left" Height="22" Margin="42.2,541,0,-242" VerticalAlignment="Center" Width="120" Grid.Column="1"/>
+
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem x:Name="UsersTab" Background="MediumAquamarine" BorderBrush="WhiteSmoke" BorderThickness="1" Header="Users" Height="30">
+                <Grid Background="Aqua" DataContext="{StaticResource usersViewSource}">
+                    <DataGrid x:Name="usersDataGrid" Background="MediumAquamarine" BorderBrush="WhiteSmoke" BorderThickness="2" Height="250" Width="378" IsReadOnly="True" Margin="10,10,10,403" ItemsSource="{Binding}"/>
+                    <Button x:Name="Users_Update" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Update" HorizontalAlignment="Left" Margin="313,633,0,0" VerticalAlignment="Top" Width="75" Click="Users_Update_Click"/>
+                    <Grid x:Name="grid1" HorizontalAlignment="Left" Margin="10,288,0,0" VerticalAlignment="Top" Height="234" Width="378">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="120"/>
+                            <RowDefinition Height="25"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="User ID:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="userIDTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" Text="{Binding UserID, Mode=OneWay}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="User Name:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="userNameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="1" Text="{Binding UserName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Profile Picture:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center"/>
+                        <Border Background="Gray" Grid.RowSpan="1" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Height="120" Width="120">
+                            <Image x:Name="userPictureImage"/>
+                        </Border>
+                        <Label Content="is Active:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center"/>
+                        <CheckBox x:Name="isActiveCheckBox" Content="" Grid.Column="1" HorizontalAlignment="Left" IsChecked="{Binding isActive, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Margin="3" Grid.Row="3" VerticalAlignment="Center"/>
+                    </Grid>
+                    <Button x:Name="CreateNewUser" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Create New User" HorizontalAlignment="Left" Margin="10,633,0,0" VerticalAlignment="Top" Width="110" Click="CreateNewUser_Click"/>
+                    <Button x:Name="DeleteUser" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Delete Selected User" HorizontalAlignment="Left" Margin="139,633,0,0" VerticalAlignment="Top" Width="138" Click="DeleteUser_Click"/>
+
+                </Grid>
+            </TabItem>
+
+            <TabItem x:Name="ChoresTab" Background="MediumAquamarine" BorderBrush="WhiteSmoke" BorderThickness="1" Header="Chores" Height="30">
+                <Grid Background="Aqua" Margin="0,0,0,0" DataContext="{StaticResource choresViewSource}">
+                    <DataGrid x:Name="ChoreDG" Background="MediumAquamarine" BorderBrush="WhiteSmoke" BorderThickness="2" IsReadOnly="True" Height="250" Width="Auto" Margin="10,10,10,403" ItemsSource="{Binding}"/>
+                    <Button x:Name="ChoreUpdate" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Update" HorizontalAlignment="Left" Margin="313,633,0,0" VerticalAlignment="Top" Width="75" Click="ChoreUpdate_Click"/>
+                    <Button x:Name="CommitBtn" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Commit to a Chore" Margin="139,265,139,0" VerticalAlignment="Top" Click="CommitBtn_Click"/>
+
+                    <Button x:Name="CreateChore" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Create New Chore" HorizontalAlignment="Left" Margin="10,633,0,0" VerticalAlignment="Top" Width="110" Click="CreateChore_Click"/>
+                    <Button x:Name="DeleteChore" Background="MediumAquamarine" BorderBrush="Black" BorderThickness="1" Content="Delete Selected Chore" HorizontalAlignment="Left" Margin="139,633,0,0" VerticalAlignment="Top" Width="138" Click="DeleteChore_Click"/>
+                    <Grid x:Name="grid2" HorizontalAlignment="Left" Margin="10,290,0,0" VerticalAlignment="Top" Width="378" Height="338">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="120"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Chore ID:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="choreIDTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" Text="{Binding ChoreID, Mode=OneWay}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Chore Name:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="choreNameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="1" Text="{Binding ChoreName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Value:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center"/>
+                        <TextBox x:Name="valueTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="2" Text="{Binding Value, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Chore Picture:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center"/>
+                        <Border Background="Gray" Grid.RowSpan="1" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Height="120" Width="120">
+                            <Image x:Name="chorePictureImage"/>
+                        </Border>
+                        <Label Content="Description:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center"/>
+                        <TextBox x:Name="descriptionTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="4" Text="{Binding Description, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="is Active:" Grid.Column="0" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Center"/>
+                        <CheckBox x:Name="isActiveCheckBox1" Content="" Grid.Column="1" HorizontalAlignment="Left" IsChecked="{Binding isActive, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Margin="3" Grid.Row="5" VerticalAlignment="Center"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Name="LeaderboardTab" Background="MediumAquamarine" BorderBrush="WhiteSmoke" BorderThickness="1" Header="Leaderboard" Height="30">
+                <Grid Background="Aqua">
+                    <StackPanel DataContext="{StaticResource scoreCardViewSource}">
+                        <DataGrid x:Name="ScoreCard" Background="MediumAquamarine" BorderBrush="WhiteSmoke" BorderThickness="2" IsReadOnly="True" HorizontalAlignment="Left" Height="215" Margin="10,10,0,0" VerticalAlignment="Top" Width="378" ItemsSource="{Binding}"/>
+                        <Grid x:Name="grid4" HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Your Score:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+                            <TextBox x:Name="scoreTextBox" Background="Aqua" BorderBrush="Aqua" IsReadOnly="True" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="0.8,8,0,2" Grid.Row="0" VerticalAlignment="Center" Width="120"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem x:Name="RewardsTab" Background="MediumAquamarine" BorderBrush="WhiteSmoke" BorderThickness="1" Header="Rewards" Height="30">
+                <Grid Background="Aqua"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

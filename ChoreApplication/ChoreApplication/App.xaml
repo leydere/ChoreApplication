@@ -1,0 +1,9 @@
+﻿<Application x:Class="ChoreApplication.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ChoreApplication"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <local:Database1DataSet x:Key="database1DataSet"/>
+    </Application.Resources>
+</Application>
